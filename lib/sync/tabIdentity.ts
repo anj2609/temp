@@ -5,9 +5,30 @@ export function createTabId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
+export function shortTabId(tabId: string): string {
+  return tabId.replace(/-/g, "").slice(0, 6).toUpperCase();
+}
+
 export function shortTabLabel(tabId: string): string {
-  const compact = tabId.replace(/-/g, "").slice(0, 6).toUpperCase();
-  return `Tab #${compact}`;
+  return `Tab #${shortTabId(tabId)}`;
+}
+
+const TAB_PALETTE = [
+  "#16a34a",
+  "#2563eb",
+  "#d8572f",
+  "#9333ea",
+  "#0d9488",
+  "#db2777",
+  "#ca8a04",
+];
+
+export function tabColor(tabId: string): string {
+  let hash = 0;
+  for (let i = 0; i < tabId.length; i++) {
+    hash = (hash * 31 + tabId.charCodeAt(i)) >>> 0;
+  }
+  return TAB_PALETTE[hash % TAB_PALETTE.length];
 }
 
 export class PresenceTracker {

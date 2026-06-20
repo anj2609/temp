@@ -10,6 +10,7 @@ export const usePresenceStore = create<PresenceStore>((set) => ({
   count: 1,
   leaderId: null,
   isLeader: false,
+  peers: [],
   setPresence: (info) => set(info),
 }));
 
@@ -18,5 +19,6 @@ export function useTabPresence(): PresenceInfo {
   const count = usePresenceStore((s) => s.count);
   const leaderId = usePresenceStore((s) => s.leaderId);
   const isLeader = usePresenceStore((s) => s.isLeader);
-  return { tabId, count, leaderId, isLeader };
+  const peers = usePresenceStore((s) => s.peers);
+  return { tabId, count, leaderId, isLeader, peers };
 }

@@ -9,6 +9,7 @@ interface SliderProps {
   max: number;
   step: number;
   onChange: (value: number) => void;
+  onRelease?: () => void;
   className?: string;
   ariaLabel?: string;
 }
@@ -19,6 +20,7 @@ export function Slider({
   max,
   step,
   onChange,
+  onRelease,
   className,
   ariaLabel,
 }: SliderProps) {
@@ -46,6 +48,10 @@ export function Slider({
       value={clamped}
       aria-label={ariaLabel}
       onChange={(e) => onChange(Number(e.target.value))}
+      onPointerUp={onRelease}
+      onPointerCancel={onRelease}
+      onBlur={onRelease}
+      onKeyUp={onRelease}
       className={cn("h-[18px] w-full", className)}
       style={{
         ["--track" as string]: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${pct}%, var(--surface-muted) ${pct}%, var(--surface-muted) 100%)`,

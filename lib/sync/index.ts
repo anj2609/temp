@@ -6,6 +6,7 @@ import {
   HEARTBEAT_INTERVAL,
   PRESENCE_TIMEOUT,
   SWEEP_INTERVAL,
+  type FieldActivity,
   type PresenceInfo,
   type SyncMessage,
 } from "./types";
@@ -13,6 +14,7 @@ import {
 export interface SyncHandlers {
   onRemoteState: (state: SharedState) => void;
   onPresence: (info: PresenceInfo) => void;
+  onActivity: (activity: FieldActivity) => void;
   getState: () => SharedState;
 }
 
@@ -34,15 +36,16 @@ function now(): number {
 }
 
 function emitPresence(rt: Runtime): void {
-  const ids = rt.presence.ids(rt.tabId);
+  const ids = rt.presence.ids(rt.tabId).sort();
   const leaderId = computeLeader(ids);
   const info: PresenceInfo = {
     tabId: rt.tabId,
     count: ids.length,
     leaderId,
     isLeader: leaderId === rt.tabId,
+    peers: ids,
   };
-  const key = `${info.count}|${info.leaderId}`;
+  const key = `${leaderId}|${ids.join(",")}`;
   if (key !== rt.lastPresenceKey) {
     rt.lastPresenceKey = key;
     rt.handlers.onPresence(info);
@@ -91,6 +94,16 @@ function handleMessage(rt: Runtime, message: SyncMessage): void {
 
     case "LEADER_REQUEST_STATE":
       if (message.tabId !== rt.tabId && amLeader(rt)) pushState(rt);
+      return;
+
+    case "FIELD_ACTIVITY":
+      if (message.tabId !== rt.tabId) {
+        rt.handlers.onActivity({
+          tabId: message.tabId,
+          field: message.field,
+          value: message.value,
+        });
+      }
       return;
   }
 }
@@ -161,6 +174,16 @@ export function broadcastState(state: SharedState): void {
   });
 }
 
+export function broadcastActivity(field: string, value: number | null): void {
+  if (!runtime) return;
+  runtime.channel.post({
+    type: "FIELD_ACTIVITY",
+    tabId: runtime.tabId,
+    field,
+    value,
+  });
+}
+
 export function getTabId(): string {
   return runtime?.tabId ?? "";
 }
@@ -177,4 +200,4 @@ export function teardownSync(): void {
   rt.channel.close();
 }
 
-export type { PresenceInfo } from "./types";
+export type { PresenceInfo, FieldActivity } from "./types";

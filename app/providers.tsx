@@ -3,6 +3,7 @@
 import { useEffect, type ReactNode } from "react";
 import { selectShared, useEmiStore } from "@/store/useEmiStore";
 import { usePresenceStore } from "@/hooks/useTabPresence";
+import { useLiveActivityStore } from "@/hooks/useLiveActivity";
 import { readPersistedState } from "@/store/persistMiddleware";
 import { initSync } from "@/lib/sync";
 import { LOAN_BOUNDS, type Mode, type SharedState } from "@/types/domain";
@@ -65,10 +66,16 @@ export function Providers({ children }: { children: ReactNode }) {
     const teardown = initSync({
       onRemoteState: (state) => useEmiStore.getState().hydrateFromRemote(state),
       onPresence: (info) => usePresenceStore.getState().setPresence(info),
+      onActivity: (activity) => useLiveActivityStore.getState().apply(activity),
       getState: () => selectShared(useEmiStore.getState()),
     });
 
-    return teardown;
+    const prune = setInterval(() => useLiveActivityStore.getState().prune(), 600);
+
+    return () => {
+      clearInterval(prune);
+      teardown();
+    };
   }, []);
 
   useEffect(() => {

@@ -48,6 +48,7 @@ export function ScenarioCard({
       <div className="space-y-5">
         <SyncedSliderInput
           label="Amount"
+          fieldId={`scenario.${scenarioKey}.principal`}
           value={inputs.principal}
           onChange={(v) => onChange("principal", v)}
           min={LOAN_BOUNDS.principal.min}
@@ -58,6 +59,7 @@ export function ScenarioCard({
         />
         <SyncedSliderInput
           label="Rate"
+          fieldId={`scenario.${scenarioKey}.annualRate`}
           value={inputs.annualRate}
           onChange={(v) => onChange("annualRate", v)}
           min={LOAN_BOUNDS.annualRate.min}
@@ -68,6 +70,7 @@ export function ScenarioCard({
         />
         <SyncedSliderInput
           label="Tenure"
+          fieldId={`scenario.${scenarioKey}.tenureMonths`}
           value={inputs.tenureMonths}
           onChange={(v) => onChange("tenureMonths", v)}
           min={LOAN_BOUNDS.tenureMonths.min}
