@@ -52,6 +52,19 @@ npm test           # finance unit tests (Vitest)
 - **URL state** — calculator inputs and mode are encoded in the query string for shareable links.
   (`app/providers.tsx`)
 
+### Standout extras
+
+- **Multiplayer ghost presence** — when another tab drags a slider you see a live ghost thumb +
+  label in that tab's colour, and the header shows a colour-coded avatar per open tab with the
+  leader crowned. Built on an *ephemeral* `FIELD_ACTIVITY` message that is throttled, never
+  persisted, and never enters undo history — separate from the durable `STATE_UPDATE` path.
+  (`lib/sync`, `hooks/useLiveActivity.ts`, `components/calculator/SyncedSliderInput.tsx`)
+- **Reverse "solve for"** — flip the calculator to enter a monthly budget and solve for the loan
+  amount or tenure you can afford. The solved value feeds the real synced calculator.
+  (`lib/finance/solver.ts`, `components/calculator/InputPanel.tsx`)
+- **Scan to continue on your phone** — the Share button renders a QR of the URL-encoded scenario
+  so you can hop to mobile. (`components/share/ShareQr.tsx`)
+
 ---
 
 ## How cross-tab sync works
@@ -76,8 +89,8 @@ Tab B  ◀─hydrateFromRemote─  Zustand store  ◀──onmessage (STATE_UPDA
 - **Persistence ≠ transport.** `localStorage` is used only to survive a full page reload
   (debounced write, hydrate before listeners attach) — never as the cross-tab messaging mechanism.
 
-Message protocol: `STATE_UPDATE`, `TAB_HELLO`, `TAB_HEARTBEAT`, `TAB_BYE`, `LEADER_REQUEST_STATE`
-(`lib/sync/types.ts`).
+Message protocol: `STATE_UPDATE`, `TAB_HELLO`, `TAB_HEARTBEAT`, `TAB_BYE`, `LEADER_REQUEST_STATE`,
+and the ephemeral `FIELD_ACTIVITY` used only for live ghost cursors (`lib/sync/types.ts`).
 
 ---
 
@@ -115,6 +128,10 @@ types/        shared domain types
   workspace rather than starting from defaults.
 - **Undo across tabs:** change the amount in Tab A, press `Ctrl+Z` in Tab B — both revert.
 - **URL state:** edit inputs, copy the URL, open it in a fresh tab/window.
+- **Ghost presence:** open two tabs side by side and drag a slider in one — the other shows a
+  live ghost thumb in your tab's colour while you drag.
+- **Solve for:** in Single mode switch "Solve for" to Amount or Tenure and enter a monthly budget.
+- **QR:** click Share and scan the code with your phone.
 
 ---
 
