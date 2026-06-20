@@ -1,7 +1,7 @@
 "use client";
 
 import { useEmiStore } from "@/store/useEmiStore";
-import { cn } from "@/lib/cn";
+import { MoonIcon, SunIcon } from "@/components/ui/icons";
 
 export function ThemeToggle() {
   const theme = useEmiStore((s) => s.theme);
@@ -16,8 +16,7 @@ export function ThemeToggle() {
       title="Toggle theme (synced across tabs)"
       className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-ink-muted transition-colors hover:text-ink"
     >
-      <span className={cn("text-base", isDark && "hidden")}>🌙</span>
-      <span className={cn("text-base", !isDark && "hidden")}>☀️</span>
+      {isDark ? <SunIcon /> : <MoonIcon />}
     </button>
   );
 }

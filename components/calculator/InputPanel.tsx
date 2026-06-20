@@ -30,7 +30,7 @@ function ResultChip({
       <p className="text-xs text-accent-ink">{label}</p>
       <p className="mt-0.5 text-2xl font-semibold text-ink">{value}</p>
       <p className="mt-0.5 text-xs text-ink-muted">
-        {note ?? "Solved live from your inputs — synced to every tab."}
+        {note ?? "Solved live from your inputs, synced to every tab."}
       </p>
     </div>
   );
@@ -183,7 +183,7 @@ export function InputPanel() {
                 tenureSolved === null
                   ? "Budget too low to cover the interest at this rate."
                   : tenureSolved > LOAN_BOUNDS.tenureMonths.max
-                  ? `At this budget the loan needs ~${tenureSolved} months — capped at 84.`
+                  ? `At this budget the loan needs about ${tenureSolved} months, capped at 84.`
                   : null
               }
             />

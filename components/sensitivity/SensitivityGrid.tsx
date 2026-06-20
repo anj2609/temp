@@ -5,6 +5,27 @@ import { useSensitivityGrid } from "@/hooks/useSensitivityGrid";
 import { formatRupeesPlain, formatPercent } from "@/lib/finance/format";
 import { cn } from "@/lib/cn";
 
+const HEAT_STOPS = [
+  [22, 163, 74],
+  [234, 179, 8],
+  [229, 72, 77],
+];
+
+function lerp(a: number, b: number, t: number): number {
+  return a + (b - a) * t;
+}
+
+function heatColor(t: number): string {
+  const clamped = Math.min(Math.max(t, 0), 1);
+  const segment = clamped < 0.5 ? 0 : 1;
+  const k = clamped < 0.5 ? clamped / 0.5 : (clamped - 0.5) / 0.5;
+  const a = HEAT_STOPS[segment];
+  const b = HEAT_STOPS[segment + 1];
+  return `rgb(${Math.round(lerp(a[0], b[0], k))}, ${Math.round(
+    lerp(a[1], b[1], k)
+  )}, ${Math.round(lerp(a[2], b[2], k))})`;
+}
+
 export function SensitivityGrid() {
   const grid = useSensitivityGrid();
 
@@ -17,14 +38,15 @@ export function SensitivityGrid() {
     <Card>
       <CardHeader
         title="What-if sensitivity"
-        subtitle="EMI across nearby rates and tenures — current cell highlighted"
+        subtitle="EMI for nearby rates and tenures. The current loan sits at the centre."
       />
+
       <div className="-mx-2 overflow-x-auto px-2 scrollbar-slim">
         <table className="w-full border-separate border-spacing-1 text-right text-xs">
           <thead>
             <tr>
               <th className="px-2 py-1 text-left font-medium text-ink-subtle">
-                Tenure \ Rate
+                mo \ rate
               </th>
               {grid.rates.map((rate) => (
                 <th
@@ -40,7 +62,7 @@ export function SensitivityGrid() {
             {grid.cells.map((row, rowIndex) => (
               <tr key={grid.tenures[rowIndex]}>
                 <th className="whitespace-nowrap px-2 py-1 text-left font-medium text-ink-muted tabular-nums">
-                  {grid.tenures[rowIndex]} mo
+                  {grid.tenures[rowIndex]}
                 </th>
                 {row.map((cell) => {
                   const intensity = (cell.emi - min) / span;
@@ -48,20 +70,16 @@ export function SensitivityGrid() {
                     <td
                       key={`${cell.tenure}-${cell.rate}`}
                       className={cn(
-                        "rounded-lg px-2 py-1.5 tabular-nums transition-colors",
+                        "rounded-lg px-2 py-1.5 tabular-nums transition-transform",
                         cell.isCurrent
-                          ? "bg-accent font-semibold text-white ring-2 ring-accent"
-                          : "text-ink"
+                          ? "font-semibold text-surface ring-2 ring-ink"
+                          : "font-medium text-ink hover:scale-[1.04]"
                       )}
-                      style={
-                        cell.isCurrent
-                          ? undefined
-                          : {
-                              backgroundColor: `color-mix(in srgb, var(--negative) ${Math.round(
-                                intensity * 22
-                              )}%, var(--surface-muted))`,
-                            }
-                      }
+                      style={{
+                        backgroundColor: cell.isCurrent
+                          ? "var(--ink)"
+                          : `color-mix(in srgb, ${heatColor(intensity)} 42%, var(--surface))`,
+                      }}
                     >
                       {formatRupeesPlain(cell.emi)}
                     </td>
@@ -71,6 +89,18 @@ export function SensitivityGrid() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-4 flex items-center gap-3 text-xs text-ink-subtle">
+        <span>lower EMI</span>
+        <span
+          className="h-2 flex-1 rounded-full"
+          style={{
+            background:
+              "linear-gradient(to right, rgb(22,163,74), rgb(234,179,8), rgb(229,72,77))",
+          }}
+        />
+        <span>higher EMI</span>
       </div>
     </Card>
   );

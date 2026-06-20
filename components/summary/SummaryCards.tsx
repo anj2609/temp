@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/Card";
 import { PrincipalInterestBar } from "./PrincipalInterestBar";
 import { useEmiResult } from "@/hooks/useEmiResult";
 import { formatRupees } from "@/lib/finance/format";
+import { ReceiptIcon, TrendingUpIcon, WalletIcon } from "@/components/ui/icons";
 
 interface StatProps {
   label: string;
@@ -50,19 +51,19 @@ export function SummaryCards() {
           value={formatRupees(summary.emi)}
           helper="fixed payment every month"
           emphasis
-          icon={<span className="text-sm font-bold">₹</span>}
+          icon={<WalletIcon size={16} />}
         />
         <Stat
           label="Total interest"
           value={formatRupees(summary.totalInterest)}
           helper="cost of borrowing over the tenure"
-          icon={<span className="text-sm">↗</span>}
+          icon={<TrendingUpIcon size={16} />}
         />
         <Stat
           label="Total payable"
           value={formatRupees(summary.totalPayable)}
-          helper="principal + total interest"
-          icon={<span className="text-sm">Σ</span>}
+          helper="principal plus total interest"
+          icon={<ReceiptIcon size={16} />}
         />
       </div>
       <div className="mt-6 border-t border-border pt-5">

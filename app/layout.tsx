@@ -6,7 +6,7 @@ import { Providers } from "./providers";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "EMI Workspace — Shared Loan Calculator",
+  title: "EMI Calculator",
   description:
     "A loan EMI calculator whose state syncs in real time across every open browser tab.",
 };

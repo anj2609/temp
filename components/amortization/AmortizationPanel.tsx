@@ -37,7 +37,7 @@ export function AmortizationPanel() {
       {breakEvenMonth ? (
         <div className="mb-4">
           <Badge tone="accent">
-            Break-even at month {breakEvenMonth} — principal repaid overtakes interest
+            Break-even at month {breakEvenMonth}, principal repaid overtakes interest
           </Badge>
         </div>
       ) : null}

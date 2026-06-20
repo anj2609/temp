@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/Badge";
 import { ThemeToggle } from "@/components/calculator/ThemeToggle";
 import { ShareQr } from "@/components/share/ShareQr";
+import { CrownIcon, RedoIcon, UndoIcon } from "@/components/ui/icons";
 import { useTabPresence } from "@/hooks/useTabPresence";
 import { useEmiStore } from "@/store/useEmiStore";
 import { shortTabId, tabColor } from "@/lib/sync/tabIdentity";
@@ -29,44 +30,42 @@ function AvatarRail({
           <span
             key={id}
             title={`Tab #${shortTabId(id)}${isSelf ? " (you)" : ""}${
-              isLead ? " · leader" : ""
+              isLead ? ", leader" : ""
             }`}
             className={cn(
-              "relative flex h-8 w-8 items-center justify-center rounded-full border-2 text-[10px] font-semibold text-white",
+              "relative flex h-9 w-9 items-center justify-center rounded-full border-2 text-[11px] font-semibold text-white",
               isSelf ? "border-ink" : "border-surface"
             )}
             style={{
               backgroundColor: tabColor(id),
-              marginLeft: index === 0 ? 0 : -8,
+              marginLeft: index === 0 ? 0 : -10,
               zIndex: shown.length - index,
             }}
           >
             {shortTabId(id).slice(0, 2)}
             {isLead ? (
-              <span className="absolute -right-1 -top-1.5 text-[11px]" aria-hidden>
-                👑
+              <span
+                className="absolute -right-1.5 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-surface"
+                style={{ color: "#d9a300" }}
+              >
+                <CrownIcon size={11} />
               </span>
             ) : null}
           </span>
         );
       })}
-      {peers.length > shown.length ? (
-        <span className="ml-1.5 text-xs text-ink-muted">
-          +{peers.length - shown.length}
-        </span>
-      ) : null}
     </div>
   );
 }
 
 function HistoryButton({
   label,
-  glyph,
+  icon,
   disabled,
   onClick,
 }: {
   label: string;
-  glyph: string;
+  icon: React.ReactNode;
   disabled: boolean;
   onClick: () => void;
 }) {
@@ -82,7 +81,7 @@ function HistoryButton({
         disabled ? "cursor-not-allowed opacity-40" : "hover:text-ink"
       )}
     >
-      {glyph}
+      {icon}
     </button>
   );
 }
@@ -95,31 +94,28 @@ export function Header() {
   const canRedo = useEmiStore((s) => s._future.length > 0);
 
   return (
-    <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <header className="flex flex-wrap items-center justify-between gap-4">
       <div className="flex items-center gap-3">
-        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent text-lg font-bold text-white">
-          ₹
-        </span>
-        <div>
-          <h1 className="text-lg font-semibold text-ink">EMI Workspace</h1>
-          <p className="text-sm text-ink-muted">
-            Shared loan calculator — synced across every open tab
-          </p>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2">
         <AvatarRail peers={peers} tabId={tabId} leaderId={leaderId} />
         <Badge tone="positive">
           <span className="h-2 w-2 animate-pulse rounded-full bg-positive" />
-          {count} {count === 1 ? "tab" : "tabs"} active
+          {count} {count === 1 ? "tab" : "tabs"} in sync
         </Badge>
+      </div>
 
-        <div className="mx-1 flex items-center gap-2">
-          <HistoryButton label="Undo (Ctrl+Z)" glyph="↶" disabled={!canUndo} onClick={undo} />
-          <HistoryButton label="Redo (Ctrl+Shift+Z)" glyph="↷" disabled={!canRedo} onClick={redo} />
-        </div>
-
+      <div className="flex items-center gap-2">
+        <HistoryButton
+          label="Undo (Ctrl+Z)"
+          icon={<UndoIcon />}
+          disabled={!canUndo}
+          onClick={undo}
+        />
+        <HistoryButton
+          label="Redo (Ctrl+Shift+Z)"
+          icon={<RedoIcon />}
+          disabled={!canRedo}
+          onClick={redo}
+        />
         <ShareQr />
         <ThemeToggle />
       </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
+import { QrIcon } from "@/components/ui/icons";
 
 export function ShareQr() {
   const [open, setOpen] = useState(false);
@@ -51,7 +52,7 @@ export function ShareQr() {
         title="Share / open on your phone"
         className="flex h-10 items-center gap-2 rounded-full border border-border bg-surface px-4 text-sm font-medium text-ink-muted transition-colors hover:text-ink"
       >
-        <span className="text-base leading-none">▦</span>
+        <QrIcon size={16} />
         Share
       </button>
 
