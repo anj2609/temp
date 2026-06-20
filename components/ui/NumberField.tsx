@@ -55,6 +55,7 @@ export function NumberField({
         max={max}
         step={step}
         onChange={(e) => setDraft(e.target.value)}
+        onWheel={(e) => e.currentTarget.blur()}
         onBlur={commit}
         onKeyDown={(e) => {
           if (e.key === "Enter") (e.target as HTMLInputElement).blur();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useEffect, useId, useRef } from "react";
 import { cn } from "@/lib/cn";
 
 interface SliderProps {
@@ -23,11 +23,21 @@ export function Slider({
   ariaLabel,
 }: SliderProps) {
   const id = useId();
+  const ref = useRef<HTMLInputElement>(null);
   const clamped = Math.min(Math.max(value, min), max);
   const pct = max > min ? ((clamped - min) / (max - min)) * 100 : 0;
 
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const stopWheel = (event: WheelEvent) => event.preventDefault();
+    el.addEventListener("wheel", stopWheel, { passive: false });
+    return () => el.removeEventListener("wheel", stopWheel);
+  }, []);
+
   return (
     <input
+      ref={ref}
       id={id}
       type="range"
       min={min}
