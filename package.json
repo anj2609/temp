@@ -11,6 +11,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "geist": "^1.7.2",
     "next": "14.2.5",
     "qrcode": "^1.5.4",
     "react": "18.3.1",
