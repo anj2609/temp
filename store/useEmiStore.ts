@@ -12,9 +12,13 @@ import { syncMiddleware } from "./syncMiddleware";
 
 type Origin = "init" | "local" | "remote" | "storage" | "ui";
 
+export type SolveMode = "emi" | "amount" | "tenure";
+
 export interface UiPreferences {
   amortizationView: "table" | "chart";
   amortizationPage: number;
+  solveMode: SolveMode;
+  solveBudget: number;
 }
 
 export interface EmiStore extends SharedState, UiPreferences {
@@ -35,6 +39,8 @@ export interface EmiStore extends SharedState, UiPreferences {
 
   setAmortizationView: (view: "table" | "chart") => void;
   setAmortizationPage: (page: number) => void;
+  setSolveMode: (mode: SolveMode) => void;
+  setSolveBudget: (value: number) => void;
 
   hydrateFromRemote: (state: SharedState) => void;
   hydrateFromStorage: (state: SharedState) => void;
@@ -103,6 +109,8 @@ export const useEmiStore = create<EmiStore>()(
         ...DEFAULT_SHARED,
         amortizationView: "table",
         amortizationPage: 1,
+        solveMode: "emi",
+        solveBudget: 30_000,
         _origin: "init",
         _past: [],
         _future: [],
@@ -155,6 +163,11 @@ export const useEmiStore = create<EmiStore>()(
 
         setAmortizationPage: (page) =>
           set({ amortizationPage: Math.max(1, page), _origin: "ui" }),
+
+        setSolveMode: (mode) => set({ solveMode: mode, _origin: "ui" }),
+
+        setSolveBudget: (value) =>
+          set({ solveBudget: Math.max(0, value), _origin: "ui" }),
 
         hydrateFromRemote: (state) =>
           set((s) => ({
