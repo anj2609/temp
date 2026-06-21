@@ -9,6 +9,32 @@ import { useEmiStore } from "@/store/useEmiStore";
 import { shortTabId, tabColor } from "@/lib/sync/tabIdentity";
 import { cn } from "@/lib/cn";
 
+function tabHash(id: string): number {
+  return id.split("").reduce((acc, c) => (Math.imul(acc, 31) + c.charCodeAt(0)) >>> 0, 0);
+}
+
+function TabIdenticon({ id }: { id: string }) {
+  const h = tabHash(id);
+  // 5 bits → symmetric 3×3 grid (left col + center col mirrored)
+  const b = (n: number) => Boolean((h >> n) & 1);
+  const grid = [
+    [b(0), b(3), b(0)],
+    [b(1), b(4), b(1)],
+    [b(2), b(3), b(2)],
+  ];
+  return (
+    <svg viewBox="0 0 15 15" width="17" height="17" aria-hidden>
+      {grid.map((row, r) =>
+        row.map((on, c) =>
+          on ? (
+            <rect key={`${r}-${c}`} x={c * 5} y={r * 5} width="4" height="4" rx="0.8" fill="currentColor" />
+          ) : null
+        )
+      )}
+    </svg>
+  );
+}
+
 function AvatarRail({
   peers,
   tabId,
@@ -29,11 +55,9 @@ function AvatarRail({
         return (
           <span
             key={id}
-            title={`Tab #${shortTabId(id)}${isSelf ? " (you)" : ""}${
-              isLead ? ", leader" : ""
-            }`}
+            title={`Tab #${shortTabId(id)}${isSelf ? " (you)" : ""}${isLead ? ", leader" : ""}`}
             className={cn(
-              "relative flex h-9 w-9 items-center justify-center rounded-full text-[11px] font-semibold ring-2",
+              "relative flex h-9 w-9 items-center justify-center rounded-full ring-2",
               isSelf || isLead ? "ring-accent" : "ring-border"
             )}
             style={{
@@ -43,7 +67,7 @@ function AvatarRail({
               zIndex: shown.length - index,
             }}
           >
-            {shortTabId(id).slice(0, 2)}
+            <TabIdenticon id={id} />
           </span>
         );
       })}
