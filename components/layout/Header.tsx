@@ -33,11 +33,12 @@ function AvatarRail({
               isLead ? ", leader" : ""
             }`}
             className={cn(
-              "relative flex h-9 w-9 items-center justify-center rounded-full text-[11px] font-semibold text-white ring-2",
-              isLead ? "ring-accent" : isSelf ? "ring-ink" : "ring-surface"
+              "relative flex h-9 w-9 items-center justify-center rounded-full text-[11px] font-semibold ring-2",
+              isSelf || isLead ? "ring-accent" : "ring-border"
             )}
             style={{
-              backgroundColor: tabColor(id),
+              backgroundColor: "var(--surface)",
+              color: tabColor(id),
               marginLeft: index === 0 ? 0 : -10,
               zIndex: shown.length - index,
             }}
@@ -90,8 +91,7 @@ export function Header() {
       <div className="flex items-center gap-3">
         <AvatarRail peers={peers} tabId={tabId} leaderId={leaderId} />
         <Badge tone="neutral">
-          <span className="h-2 w-2 animate-pulse rounded-full bg-ink-subtle" />
-          {count} {count === 1 ? "tab" : "tabs"} in sync
+          {count} {count === 1 ? "session" : "sessions"} live
         </Badge>
       </div>
 
