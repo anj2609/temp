@@ -13,7 +13,7 @@ export function CompareMode() {
   const { summaries, best } = useBestScenario();
 
   return (
-    <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-2 lg:grid-cols-3">
       {KEYS.map((key) => (
         <ScenarioCard
           key={key}
