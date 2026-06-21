@@ -8,6 +8,7 @@ import { readPersistedState } from "@/store/persistMiddleware";
 import { initSync } from "@/lib/sync";
 import { useToastStore } from "@/hooks/useToastStore";
 import { Toaster } from "@/components/ui/Toaster";
+import { useScrollSync } from "@/hooks/useScrollSync";
 import { LOAN_BOUNDS, type Mode, type SharedState } from "@/types/domain";
 
 function clamp(value: number, min: number, max: number): number {
@@ -144,6 +145,8 @@ export function Providers({ children }: { children: ReactNode }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  useScrollSync();
 
   return (
     <>

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useToastStore, type Toast } from "@/hooks/useToastStore";
-import { tabColor, shortTabLabel } from "@/lib/sync/tabIdentity";
+import { tabColor } from "@/lib/sync/tabIdentity";
 
 export function Toaster() {
   const toasts = useToastStore((s) => s.toasts);
@@ -18,6 +18,27 @@ export function Toaster() {
         <ToastItem key={toast.id} toast={toast} onDismiss={() => dismiss(toast.id)} />
       ))}
     </div>
+  );
+}
+
+function TabIdenticon({ id }: { id: string }) {
+  const h = id.split("").reduce((acc, c) => (Math.imul(acc, 31) + c.charCodeAt(0)) >>> 0, 0);
+  const b = (n: number) => Boolean((h >> n) & 1);
+  const grid = [
+    [b(0), b(3), b(0)],
+    [b(1), b(4), b(1)],
+    [b(2), b(3), b(2)],
+  ];
+  return (
+    <svg viewBox="0 0 15 15" width="14" height="14" aria-hidden>
+      {grid.map((row, r) =>
+        row.map((on, c) =>
+          on ? (
+            <rect key={`${r}-${c}`} x={c * 5} y={r * 5} width="4" height="4" rx="0.8" fill="currentColor" />
+          ) : null
+        )
+      )}
+    </svg>
   );
 }
 
@@ -37,28 +58,26 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
     };
   }, [onDismiss]);
 
-  const dot = toast.tabId ? tabColor(toast.tabId) : null;
-  const label = toast.tabId ? shortTabLabel(toast.tabId) : null;
+  const color = toast.tabId ? tabColor(toast.tabId) : "var(--accent)";
 
   return (
     <div
       role="status"
-      className="pointer-events-auto flex max-w-[280px] items-start gap-2.5 rounded-xl border border-border bg-surface px-3.5 py-2.5 shadow-float text-sm text-ink transition-all duration-300"
+      className="pointer-events-auto flex max-w-[280px] overflow-hidden rounded-xl border border-border bg-surface shadow-float transition-all duration-300"
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(8px)",
+        transform: visible ? "translateY(0) scale(1)" : "translateY(10px) scale(0.97)",
       }}
     >
-      {dot && (
-        <span
-          className="mt-0.5 h-2 w-2 flex-shrink-0 rounded-full"
-          style={{ backgroundColor: dot }}
-        />
-      )}
-      <span className="leading-snug">
-        {label && <span className="font-medium">{label} </span>}
-        {toast.message}
-      </span>
+      <span className="w-1 flex-shrink-0" style={{ backgroundColor: color }} />
+      <div className="flex items-start gap-2 px-3 py-2.5">
+        {toast.tabId && (
+          <span className="mt-0.5 flex-shrink-0" style={{ color }}>
+            <TabIdenticon id={toast.tabId} />
+          </span>
+        )}
+        <span className="text-sm leading-snug text-ink">{toast.message}</span>
+      </div>
     </div>
   );
 }
