@@ -30,14 +30,14 @@ export function Dashboard() {
         <ModeTabs />
 
         {mode === "single" ? (
-          <div className="grid gap-2 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
+          <div className="grid grid-cols-1 gap-2 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
             <InputPanel />
             <HeadlinePanels />
           </div>
         ) : null}
 
         {mode === "prepayment" ? (
-          <div className="grid gap-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)]">
+          <div className="grid grid-cols-1 gap-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)]">
             <PrepaymentPlanner />
             <HeadlinePanels />
           </div>
@@ -46,7 +46,7 @@ export function Dashboard() {
         {mode === "compare" ? (
           <div className="space-y-2">
             <CompareMode />
-            <div className="grid gap-2 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
               <SummaryCards />
               <SensitivityGrid />
             </div>
