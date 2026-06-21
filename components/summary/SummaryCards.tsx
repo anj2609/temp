@@ -37,7 +37,7 @@ export function SummaryCards() {
 
   return (
     <Card>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 [&>*]:min-w-0">
         <Stat
           label="Monthly EMI"
           value={<RollingNumber value={summary.emi} format={formatRupees} />}

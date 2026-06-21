@@ -86,7 +86,7 @@ export function Header() {
   const canRedo = useEmiStore((s) => s._future.length > 0);
 
   return (
-    <header className="flex flex-wrap items-center justify-between gap-4">
+    <header className="flex flex-wrap items-center gap-4">
       <div className="flex items-center gap-3">
         <AvatarRail peers={peers} tabId={tabId} leaderId={leaderId} />
         <Badge tone="neutral">
@@ -95,7 +95,7 @@ export function Header() {
         </Badge>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="ml-auto flex items-center gap-2">
         <HistoryButton
           label="Undo (Ctrl+Z)"
           icon={<UndoIcon />}
