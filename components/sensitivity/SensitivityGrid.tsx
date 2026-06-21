@@ -42,7 +42,7 @@ export function SensitivityGrid() {
       />
 
       <div className="-mx-2 overflow-x-auto px-2 scrollbar-slim">
-        <table className="w-full border-separate border-spacing-1 text-right text-xs">
+        <table className="w-full min-w-[480px] border-separate border-spacing-1 text-right text-xs">
           <thead>
             <tr>
               <th className="px-2 py-1 text-left font-medium text-ink-subtle">

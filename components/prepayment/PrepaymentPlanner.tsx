@@ -38,7 +38,7 @@ export function PrepaymentPlanner() {
         }
       />
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-3 gap-2">
         <SavingsStat
           label="New tenure"
           value={formatMonths(newTenure)}
