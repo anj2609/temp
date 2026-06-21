@@ -22,13 +22,25 @@ export function Toggle<T extends string>({
   size = "md",
   className,
 }: ToggleProps<T>) {
+  const activeIndex = options.findIndex((o) => o.value === value);
+
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border border-border bg-surface-muted p-1",
+        "relative inline-flex rounded-full border border-border bg-surface-muted p-1",
         className
       )}
     >
+      <span
+        aria-hidden
+        className="absolute inset-y-1 left-1 rounded-full bg-ink shadow-sm"
+        style={{
+          width: `calc((100% - 8px) / ${options.length})`,
+          transform: `translateX(${activeIndex * 100}%)`,
+          transition: "transform 220ms cubic-bezier(0.4, 0, 0.2, 1)",
+          willChange: "transform",
+        }}
+      />
       {options.map((option) => {
         const active = option.value === value;
         return (
@@ -37,11 +49,9 @@ export function Toggle<T extends string>({
             type="button"
             onClick={() => onChange(option.value)}
             className={cn(
-              "rounded-full font-medium transition-colors",
+              "relative z-10 flex-1 rounded-full font-medium transition-colors duration-200",
               size === "sm" ? "px-3 py-1 text-xs" : "px-4 py-1.5 text-sm",
-              active
-                ? "bg-ink text-surface shadow-sm"
-                : "text-ink-muted hover:text-ink"
+              active ? "text-surface" : "text-ink-muted hover:text-ink"
             )}
           >
             {option.label}

@@ -12,7 +12,7 @@ import { useEmiStore } from "@/store/useEmiStore";
 
 function HeadlinePanels() {
   return (
-    <div className="space-y-5">
+    <div className="space-y-2">
       <SummaryCards />
       <SensitivityGrid />
     </div>
@@ -26,27 +26,27 @@ export function Dashboard() {
     <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <Header />
 
-      <div className="mt-6 space-y-5">
+      <div className="mt-4 space-y-2">
         <ModeTabs />
 
         {mode === "single" ? (
-          <div className="grid gap-3 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
+          <div className="grid gap-2 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
             <InputPanel />
             <HeadlinePanels />
           </div>
         ) : null}
 
         {mode === "prepayment" ? (
-          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)]">
+          <div className="grid gap-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)]">
             <PrepaymentPlanner />
             <HeadlinePanels />
           </div>
         ) : null}
 
         {mode === "compare" ? (
-          <div className="space-y-5">
+          <div className="space-y-2">
             <CompareMode />
-            <div className="grid gap-3 lg:grid-cols-2">
+            <div className="grid gap-2 lg:grid-cols-2">
               <SummaryCards />
               <SensitivityGrid />
             </div>
