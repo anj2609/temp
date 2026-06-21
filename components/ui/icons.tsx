@@ -99,3 +99,31 @@ export function ReceiptIcon({ size = 18, className }: IconProps) {
     </svg>
   );
 }
+
+export function TrendingDownIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg {...svgProps(size, className)}>
+      <path d="M3 7l6 6 4-4 8 8" />
+      <path d="M21 17v-6h-6" />
+    </svg>
+  );
+}
+
+export function ClockIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg {...svgProps(size, className)}>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 7.5V12l3 2" />
+    </svg>
+  );
+}
+
+export function ScaleIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg {...svgProps(size, className)}>
+      <path d="M12 4v16M7 20h10" />
+      <path d="M5 7l-2.5 5a3 3 0 0 0 5 0L5 7zM19 7l-2.5 5a3 3 0 0 0 5 0L19 7z" />
+      <path d="M5 7l7-1.5L19 7" />
+    </svg>
+  );
+}

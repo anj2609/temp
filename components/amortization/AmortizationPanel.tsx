@@ -7,8 +7,48 @@ import { AmortizationTable } from "./AmortizationTable";
 import { AmortizationChart } from "./AmortizationChart";
 import { ExportCsvButton } from "./ExportCsvButton";
 import { useAmortizationSchedule } from "@/hooks/useAmortizationSchedule";
-import { useLoanInsights } from "@/hooks/useLoanInsights";
+import { useLoanInsights, type LoanInsight } from "@/hooks/useLoanInsights";
 import { useEmiStore } from "@/store/useEmiStore";
+import { ScaleIcon, ClockIcon, TrendingDownIcon } from "@/components/ui/icons";
+
+const INSIGHT_ICON = {
+  cost: ScaleIcon,
+  half: ClockIcon,
+  trend: TrendingDownIcon,
+} as const;
+
+function InsightCard({ insight }: { insight: LoanInsight }) {
+  const Icon = INSIGHT_ICON[insight.icon];
+  const pct = Math.round(Math.min(Math.max(insight.meter, 0), 1) * 100);
+
+  return (
+    <div className="group rounded-2xl border border-border bg-surface p-4 transition-shadow hover:shadow-card">
+      <div className="flex items-center gap-2.5">
+        <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent-ink">
+          <Icon size={16} />
+        </span>
+        <span className="text-[11px] font-medium uppercase tracking-wide text-ink-subtle">
+          {insight.label}
+        </span>
+      </div>
+
+      <p className="mt-3 text-xl font-semibold tracking-tight text-ink">{insight.value}</p>
+      <p className="mt-1 text-xs leading-relaxed text-ink-muted">{insight.sub}</p>
+
+      <div className="mt-3">
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-muted">
+          <div
+            className="h-full rounded-full bg-accent transition-[width] duration-500 ease-out"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+        <p className="mt-1.5 text-[10px] uppercase tracking-wide text-ink-subtle">
+          {insight.meterCaption}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export function AmortizationPanel() {
   const { rows, breakEvenMonth } = useAmortizationSchedule();
@@ -50,18 +90,14 @@ export function AmortizationPanel() {
       )}
 
       {insights.length > 0 && (
-        <div className="mt-4 border-t border-border pt-4">
-          <p className="mb-3 text-xs font-medium text-ink-muted">Loan insights</p>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+        <div className="mt-5 border-t border-border pt-5">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-sm font-semibold text-ink">Loan insights</p>
+            <span className="text-[11px] text-ink-subtle">auto-generated from your schedule</span>
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {insights.map((insight) => (
-              <div
-                key={insight.key}
-                className="rounded-xl bg-surface-muted px-3.5 py-3"
-              >
-                <p className="text-[11px] text-ink-subtle">{insight.label}</p>
-                <p className="mt-0.5 text-sm font-semibold text-ink">{insight.value}</p>
-                <p className="mt-1 text-[10px] leading-snug text-ink-subtle">{insight.sub}</p>
-              </div>
+              <InsightCard key={insight.key} insight={insight} />
             ))}
           </div>
         </div>
