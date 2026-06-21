@@ -4,12 +4,10 @@ import { useEffect } from "react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Toggle } from "@/components/ui/Toggle";
 import { SyncedSliderInput } from "./SyncedSliderInput";
-import type { ReactNode } from "react";
 import { useEmiStore, type SolveMode } from "@/store/useEmiStore";
 import { LOAN_BOUNDS } from "@/types/domain";
 import { solvePrincipal, solveTenure } from "@/lib/finance/solver";
 import { formatRupees, formatPercent, formatMonths } from "@/lib/finance/format";
-import { WalletIcon, ClockIcon } from "@/components/ui/icons";
 
 const BUDGET = { min: 1_000, max: 200_000, step: 500 };
 
@@ -22,12 +20,10 @@ function ResultChip({
   label,
   value,
   note,
-  icon,
 }: {
   label: string;
   value: string;
   note: string | null;
-  icon: ReactNode;
 }) {
   return (
     <div
@@ -39,21 +35,16 @@ function ResultChip({
         className="pointer-events-none absolute -right-6 -top-6 h-20 w-20 rounded-full"
         style={{ backgroundColor: "color-mix(in srgb, var(--accent) 22%, transparent)" }}
       />
-      <div className="relative flex items-start gap-3">
-        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-surface text-accent-ink shadow-sm">
-          {icon}
-        </span>
-        <div className="min-w-0">
-          <p className="text-[11px] font-medium uppercase tracking-wide text-accent-ink">
-            {label}
-          </p>
-          <p className="mt-1 text-2xl font-semibold tabular-nums tracking-tight text-ink">
-            {value}
-          </p>
-          <p className="mt-1 text-xs leading-relaxed text-ink-muted">
-            {note ?? "Solved live and synced to every open tab."}
-          </p>
-        </div>
+      <div className="relative">
+        <p className="text-[11px] font-medium uppercase tracking-wide text-accent-ink">
+          {label}
+        </p>
+        <p className="mt-1 text-2xl font-semibold tabular-nums tracking-tight text-ink">
+          {value}
+        </p>
+        <p className="mt-1 text-xs leading-relaxed text-ink-muted">
+          {note ?? "Solved live and synced to every open tab."}
+        </p>
       </div>
     </div>
   );
@@ -187,7 +178,6 @@ export function InputPanel() {
               label="Loan amount you can afford"
               value={formatRupees(calculator.principal)}
               note={null}
-              icon={<WalletIcon size={18} />}
             />
           </>
         ) : null}
@@ -211,7 +201,6 @@ export function InputPanel() {
                   ? `At this budget the loan needs about ${tenureSolved} months, capped at 84.`
                   : null
               }
-              icon={<ClockIcon size={18} />}
             />
           </>
         ) : null}
