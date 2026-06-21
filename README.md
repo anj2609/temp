@@ -1,11 +1,11 @@
-# EMI Workspace — Shared Loan Calculator
+# EMI Calculator
 
 A Loan EMI calculator whose entire state (inputs, scenarios, prepayments, mode and theme)
 syncs in **real time across every open browser tab** — no backend, no polling, no `localStorage`
 event hacks. Cross-tab transport is the browser-native `BroadcastChannel` API.
 
 Built for the Frontend Intern assignment. Stack: **Next.js 14 (App Router) · React 18 · Zustand ·
-BroadcastChannel · Tailwind CSS · Recharts**.
+BroadcastChannel · Tailwind CSS · Recharts · Geist**.
 
 ---
 
@@ -33,9 +33,9 @@ npm test           # finance unit tests (Vitest)
 | # | Feature | Where |
 |---|---------|-------|
 | 1 | EMI calculator with synced slider + number inputs, live EMI / total interest / total payable and a principal-vs-interest split bar | `components/calculator`, `components/summary` |
-| 2 | Month-by-month amortization schedule — paginated table (12/page), break-even row highlighted, table ⇄ stacked-bar chart toggle | `components/amortization` |
+| 2 | Month-by-month amortization schedule — paginated table (12/page), break-even row highlighted, table ⇄ stacked area chart toggle | `components/amortization` |
 | 3 | Comparison mode — up to 3 scenarios side by side, lowest total payable highlighted | `components/compare` |
-| 4 | What-if sensitivity grid — rate × tenure EMI grid, clamped & de-duplicated near bounds, current cell highlighted, memoized | `components/sensitivity`, `hooks/useSensitivityGrid.ts` |
+| 4 | What-if sensitivity heatmap — rate × tenure EMI grid with sage→sand→dusty-rose colour scale, clamped & de-duplicated near bounds, current cell highlighted | `components/sensitivity`, `hooks/useSensitivityGrid.ts` |
 | 5 | Prepayment planner — schedule lump sums, see reduced tenure & interest saved (reduce-tenure strategy) | `components/prepayment` |
 | 6 | **Cross-tab sync** of all shared state via `BroadcastChannel` | `lib/sync`, `store/syncMiddleware.ts` |
 | 7 | Tab identity (`Tab #XXXXXX`) + live active-tab count via heartbeat presence | `lib/sync/tabIdentity.ts`, `hooks/useTabPresence.ts` |
@@ -55,15 +55,32 @@ npm test           # finance unit tests (Vitest)
 ### Standout extras
 
 - **Multiplayer ghost presence** — when another tab drags a slider you see a live ghost thumb +
-  label in that tab's colour, and the header shows a colour-coded avatar per open tab with the
-  leader crowned. Built on an *ephemeral* `FIELD_ACTIVITY` message that is throttled, never
-  persisted, and never enters undo history — separate from the durable `STATE_UPDATE` path.
+  label in that tab's colour, and the header shows a colour-coded avatar per open tab. Built on an
+  *ephemeral* `FIELD_ACTIVITY` message that is throttled, never persisted, and never enters undo
+  history — separate from the durable `STATE_UPDATE` path.
   (`lib/sync`, `hooks/useLiveActivity.ts`, `components/calculator/SyncedSliderInput.tsx`)
 - **Reverse "solve for"** — flip the calculator to enter a monthly budget and solve for the loan
-  amount or tenure you can afford. The solved value feeds the real synced calculator.
+  amount or tenure you can afford. Exact algebra for principal; logarithm formula for tenure.
   (`lib/finance/solver.ts`, `components/calculator/InputPanel.tsx`)
 - **Scan to continue on your phone** — the Share button renders a QR of the URL-encoded scenario
   so you can hop to mobile. (`components/share/ShareQr.tsx`)
+- **Odometer digit-roll** — the headline Monthly EMI value animates each digit like a slot machine
+  on change, with a green/red colour flash indicating whether EMI went down or up.
+  (`components/ui/RollingNumber.tsx`)
+
+---
+
+## UI
+
+Premium minimal design using **Geist** (self-hosted, no Google Fonts). Key choices:
+
+- Soft off-white canvas (`#f6f3f4`), near-borderless white cards, `rounded-xl` radius.
+- Single restrained accent (soft blue). Black for primary actions. Muted coral/green only for semantic deltas.
+- Sliders: 4 px track, 16 px thumb, custom CSS fill with 60 ms ease-out transition — fills slide with the thumb, not snap.
+- Toggle pills slide between options via a ref-measured `translateX` animation (220 ms cubic-bezier).
+- Sensitivity grid is a real heatmap (sage → sand → dusty-rose lerp) with a gradient legend.
+- Stacked area chart for amortization: principal fills from the bottom, interest sits above, the crossover is visually obvious.
+- Fully responsive: single-column on mobile, two-column at `lg` (1024 px). CardHeader stacks action below title on narrow screens.
 
 ---
 
@@ -83,9 +100,9 @@ Tab B  ◀─hydrateFromRemote─  Zustand store  ◀──onmessage (STATE_UPDA
   message carries `sourceTabId` and is ignored if it equals this tab. Crucially, applying a remote
   message uses a **different store action** (`hydrateFromRemote`) than user intent
   (`setCalculatorInput`), so remote updates never re-broadcast.
-- **Presence.** Each tab emits a `TAB_HEARTBEAT` every 2s; a 3s sweep drops any tab unseen for 5s.
-  `TAB_BYE` on `pagehide`/`beforeunload` makes a normal close update the count in under a second,
-  with the heartbeat timeout as the reliable fallback for crashes.
+- **Presence.** Each tab emits a `TAB_HEARTBEAT` every 2 s; a 3 s sweep drops any tab unseen for
+  5 s. `TAB_BYE` on `pagehide`/`beforeunload` makes a normal close update the count in under a
+  second, with the heartbeat timeout as the reliable fallback for crashes.
 - **Persistence ≠ transport.** `localStorage` is used only to survive a full page reload
   (debounced write, hydrate before listeners attach) — never as the cross-tab messaging mechanism.
 
@@ -99,45 +116,47 @@ and the ephemeral `FIELD_ACTIVITY` used only for live ghost cursors (`lib/sync/t
 Strict one-directional layering keeps the math testable and the sync layer swappable:
 
 ```
-app/         Next.js routes + the single client boundary (Providers)
+app/          Next.js routes + the single client boundary (Providers)
 components/   presentational + container UI (never touch BroadcastChannel)
-hooks/        memoized derived state over the store + lib/finance
+hooks/        memoised derived state over the store + lib/finance
 store/        Zustand store + sync/persist middleware
 lib/finance/  PURE math — no React, no window (unit-tested)
 lib/sync/     cross-tab transport — no finance math
 types/        shared domain types
 ```
 
-- **`lib/finance/*` is pure** — every formula is `(inputs) => result` with full floating-point
-  precision throughout and a single rounding boundary at `format.ts`. This is why the worked
-  examples reproduce to the rupee (EMI ₹38,768 for ₹15,00,000 @ 11% / 48mo). Tested with Vitest,
-  no DOM/React needed.
-- **`lib/sync/*` knows nothing about loans** — it serializes a blob, sends it, hands back what
-  arrives. It could be repointed at any shared state shape unchanged.
+- **`lib/finance/*` is pure** — every formula is `(inputs) → result` with full floating-point
+  precision throughout and a single rounding boundary at `format.ts`. Tested with Vitest, no
+  DOM/React needed.
+- **`lib/sync/*` knows nothing about loans** — it serialises a blob, sends it, hands back what
+  arrives. It could be repointed at any shared-state shape unchanged.
 - **SSR-safe by construction** — `BroadcastChannel`, `localStorage` and `crypto.randomUUID` are
   only ever touched inside `useEffect` in `app/providers.tsx`, so the server renders safe defaults
-  and there is no hydration mismatch. A tiny inline script in `app/layout.tsx` applies the saved
-  theme before paint to avoid a flash.
+  with no hydration mismatch. A tiny inline script in `app/layout.tsx` applies the saved theme
+  before paint to avoid a flash.
 
 ---
 
-## Trying the bonus features
+## Trying the features
 
-- **Leadership:** open 3 tabs; the one with the lowest id shows a `leader` badge. Close it — a new
-  leader appears in another tab within a heartbeat. Open a 4th tab — it instantly mirrors the live
-  workspace rather than starting from defaults.
-- **Undo across tabs:** change the amount in Tab A, press `Ctrl+Z` in Tab B — both revert.
-- **URL state:** edit inputs, copy the URL, open it in a fresh tab/window.
-- **Ghost presence:** open two tabs side by side and drag a slider in one — the other shows a
-  live ghost thumb in your tab's colour while you drag.
-- **Solve for:** in Single mode switch "Solve for" to Amount or Tenure and enter a monthly budget.
-- **QR:** click Share and scan the code with your phone.
+| What | How |
+|------|-----|
+| Cross-tab sync | Open the same URL in two or more tabs; edit any slider |
+| Leadership | Open 3 tabs; the one with the lowest id is the leader. Close it — a new leader is elected within one heartbeat |
+| State hand-off | Open a fresh tab while others are open — it instantly mirrors the live workspace |
+| Undo across tabs | Change amount in Tab A, press `Ctrl+Z` in Tab B — both revert |
+| Ghost presence | Open two tabs side by side; drag a slider in one and watch the ghost thumb appear in the other |
+| URL state | Edit inputs, copy the URL, open it in a fresh incognito window |
+| Solve for | In Single mode switch "Solve for" to Amount or Tenure, enter a monthly budget |
+| QR share | Click Share → scan the code with your phone |
+| Odometer | Watch the Monthly EMI digits roll and flash green/red as you move sliders |
+| CSV export | In the Amortization panel click Export CSV |
 
 ---
 
 ## Edge cases handled
 
 Zero / out-of-range inputs (clamped at the store boundary; `rate = 0` uses the `P/n` limit),
-extreme rates & tenures, prepayment larger than the balance (clamped, loan closes that month),
+extreme rates and tenures, prepayment larger than the balance (clamped — loan closes that month),
 prepayment month beyond tenure (validated + filtered), multiple prepayments in one month (summed),
 clamped/de-duplicated sensitivity axes near the bounds, and unclean tab closes (heartbeat timeout).
