@@ -6,6 +6,7 @@ import { PrincipalInterestBar } from "./PrincipalInterestBar";
 import { useEmiResult } from "@/hooks/useEmiResult";
 import { formatRupees } from "@/lib/finance/format";
 import { RollingNumber } from "@/components/ui/RollingNumber";
+import { AffordabilityGauge } from "./AffordabilityGauge";
 
 interface StatProps {
   label: string;
@@ -61,6 +62,7 @@ export function SummaryCards() {
           interestPct={summary.interestSharePct}
         />
       </div>
+      <AffordabilityGauge />
     </Card>
   );
 }

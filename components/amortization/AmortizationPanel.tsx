@@ -7,10 +7,12 @@ import { AmortizationTable } from "./AmortizationTable";
 import { AmortizationChart } from "./AmortizationChart";
 import { ExportCsvButton } from "./ExportCsvButton";
 import { useAmortizationSchedule } from "@/hooks/useAmortizationSchedule";
+import { useLoanInsights } from "@/hooks/useLoanInsights";
 import { useEmiStore } from "@/store/useEmiStore";
 
 export function AmortizationPanel() {
   const { rows, breakEvenMonth } = useAmortizationSchedule();
+  const insights = useLoanInsights();
   const view = useEmiStore((s) => s.amortizationView);
   const setView = useEmiStore((s) => s.setAmortizationView);
 
@@ -45,6 +47,24 @@ export function AmortizationPanel() {
         <AmortizationTable rows={rows} breakEvenMonth={breakEvenMonth} />
       ) : (
         <AmortizationChart rows={rows} />
+      )}
+
+      {insights.length > 0 && (
+        <div className="mt-4 border-t border-border pt-4">
+          <p className="mb-3 text-xs font-medium text-ink-muted">Loan insights</p>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {insights.map((insight) => (
+              <div
+                key={insight.key}
+                className="rounded-xl bg-surface-muted px-3.5 py-3"
+              >
+                <p className="text-[11px] text-ink-subtle">{insight.label}</p>
+                <p className="mt-0.5 text-sm font-semibold text-ink">{insight.value}</p>
+                <p className="mt-1 text-[10px] leading-snug text-ink-subtle">{insight.sub}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </Card>
   );

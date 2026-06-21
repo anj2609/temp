@@ -6,6 +6,8 @@ import { usePresenceStore } from "@/hooks/useTabPresence";
 import { useLiveActivityStore } from "@/hooks/useLiveActivity";
 import { readPersistedState } from "@/store/persistMiddleware";
 import { initSync } from "@/lib/sync";
+import { useToastStore } from "@/hooks/useToastStore";
+import { Toaster } from "@/components/ui/Toaster";
 import { LOAN_BOUNDS, type Mode, type SharedState } from "@/types/domain";
 
 function clamp(value: number, min: number, max: number): number {
@@ -64,7 +66,26 @@ export function Providers({ children }: { children: ReactNode }) {
     useEmiStore.getState().hydrateFromStorage(merged);
 
     const teardown = initSync({
-      onRemoteState: (state) => useEmiStore.getState().hydrateFromRemote(state),
+      onRemoteState: (state, sourceTabId) => {
+        const current = selectShared(useEmiStore.getState());
+        const add = useToastStore.getState().add;
+        const { principal, annualRate, tenureMonths } = state.calculator;
+        const c = current.calculator;
+
+        if (Math.abs(principal - c.principal) > c.principal * 0.001) {
+          add({ message: "changed loan amount", tabId: sourceTabId });
+        } else if (Math.abs(annualRate - c.annualRate) > 0.005) {
+          add({ message: "changed interest rate", tabId: sourceTabId });
+        } else if (tenureMonths !== c.tenureMonths) {
+          add({ message: "changed tenure", tabId: sourceTabId });
+        } else if (state.mode !== current.mode) {
+          add({ message: `switched to ${state.mode} mode`, tabId: sourceTabId });
+        } else if (state.theme !== current.theme) {
+          add({ message: "toggled theme", tabId: sourceTabId });
+        }
+
+        useEmiStore.getState().hydrateFromRemote(state);
+      },
       onPresence: (info) => usePresenceStore.getState().setPresence(info),
       onActivity: (activity) => useLiveActivityStore.getState().apply(activity),
       getState: () => selectShared(useEmiStore.getState()),
@@ -124,5 +145,10 @@ export function Providers({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <Toaster />
+    </>
+  );
 }

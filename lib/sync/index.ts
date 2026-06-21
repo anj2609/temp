@@ -12,7 +12,7 @@ import {
 } from "./types";
 
 export interface SyncHandlers {
-  onRemoteState: (state: SharedState) => void;
+  onRemoteState: (state: SharedState, sourceTabId: string) => void;
   onPresence: (info: PresenceInfo) => void;
   onActivity: (activity: FieldActivity) => void;
   getState: () => SharedState;
@@ -69,7 +69,7 @@ function handleMessage(rt: Runtime, message: SyncMessage): void {
   switch (message.type) {
     case "STATE_UPDATE":
       if (message.sourceTabId !== rt.tabId) {
-        rt.handlers.onRemoteState(message.state);
+        rt.handlers.onRemoteState(message.state, message.sourceTabId);
       }
       return;
 
