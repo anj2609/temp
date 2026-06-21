@@ -113,3 +113,19 @@ input[type="number"] {
   background: var(--border);
   border-radius: 9999px;
 }
+
+@keyframes theme-reveal {
+  from { clip-path: circle(0 at var(--ripple-x, 50%) var(--ripple-y, 50%)); }
+  to   { clip-path: circle(150vmax at var(--ripple-x, 50%) var(--ripple-y, 50%)); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: none;
+    z-index: 1;
+  }
+  ::view-transition-new(root) {
+    animation: theme-reveal 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    z-index: 2;
+  }
+}
