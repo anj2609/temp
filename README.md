@@ -22,6 +22,7 @@ others update instantly.
 ```bash
 npm run build      # production build
 npm test           # finance unit tests (Vitest)
+npm run test:e2e   # cross-tab sync tests (Playwright)
 ```
 
 ---
@@ -78,6 +79,15 @@ npm test           # finance unit tests (Vitest)
   `BroadcastChannel`. (`hooks/useScrollSync.ts`)
 - **Theme transition** - switching light/dark mode triggers a circular reveal animation that
   expands from the toggle button using the View Transitions API. (`components/calculator/ThemeToggle.tsx`)
+- **Accessibility** - skip-to-content link, mode/solve-for toggles exposed as keyboard-navigable
+  `radiogroup`s (arrow keys move selection), sliders announce a formatted `aria-valuetext` and show
+  a visible focus ring, the share popover handles `aria-expanded` + Escape-to-close, and the loan
+  summary has a polite `aria-live` region so EMI changes are announced.
+  (`components/ui/Toggle.tsx`, `components/ui/Slider.tsx`, `components/layout/Dashboard.tsx`)
+- **End-to-end sync tests** - Playwright spins up two tabs in one browser context and verifies
+  that a loan edit in one tab arrives in the other, theme toggles propagate, the presence count
+  tracks tabs opening and closing, and a freshly opened tab hydrates from the live workspace.
+  (`e2e/sync.spec.ts`)
 
 ---
 
