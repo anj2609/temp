@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/cn";
 
 interface SliderProps {
@@ -24,7 +24,6 @@ export function Slider({
   className,
   ariaLabel,
 }: SliderProps) {
-  const id = useId();
   const ref = useRef<HTMLInputElement>(null);
   const clamped = Math.min(Math.max(value, min), max);
   const pct = max > min ? ((clamped - min) / (max - min)) * 100 : 0;
@@ -32,30 +31,40 @@ export function Slider({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const stopWheel = (event: WheelEvent) => event.preventDefault();
+    const stopWheel = (e: WheelEvent) => e.preventDefault();
     el.addEventListener("wheel", stopWheel, { passive: false });
     return () => el.removeEventListener("wheel", stopWheel);
   }, []);
 
   return (
-    <input
-      ref={ref}
-      id={id}
-      type="range"
-      min={min}
-      max={max}
-      step={step}
-      value={clamped}
-      aria-label={ariaLabel}
-      onChange={(e) => onChange(Number(e.target.value))}
-      onPointerUp={onRelease}
-      onPointerCancel={onRelease}
-      onBlur={onRelease}
-      onKeyUp={onRelease}
-      className={cn("h-[18px] w-full", className)}
-      style={{
-        ["--track" as string]: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${pct}%, var(--surface-muted) ${pct}%, var(--surface-muted) 100%)`,
-      }}
-    />
+    <div className={cn("relative h-[18px] w-full select-none", className)}>
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 h-[4px] -translate-y-1/2 overflow-hidden rounded-full bg-surface-muted">
+        <div
+          className="h-full rounded-full bg-accent transition-[width] duration-[60ms] ease-out"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+
+      <div
+        className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent bg-surface shadow-sm transition-[left] duration-[60ms] ease-out"
+        style={{ left: `${pct}%` }}
+      />
+
+      <input
+        ref={ref}
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={clamped}
+        aria-label={ariaLabel}
+        onChange={(e) => onChange(Number(e.target.value))}
+        onPointerUp={onRelease}
+        onPointerCancel={onRelease}
+        onBlur={onRelease}
+        onKeyUp={onRelease}
+        className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+      />
+    </div>
   );
 }
