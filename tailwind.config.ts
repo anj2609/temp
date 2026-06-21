@@ -17,6 +17,7 @@ const config: Config = {
         "ink-muted": "var(--ink-muted)",
         "ink-subtle": "var(--ink-subtle)",
         accent: "var(--accent)",
+        "accent-strong": "var(--accent-strong)",
         "accent-soft": "var(--accent-soft)",
         "accent-ink": "var(--accent-ink)",
         positive: "var(--positive)",
@@ -30,8 +31,8 @@ const config: Config = {
         "3xl": "2rem",
       },
       boxShadow: {
-        card: "0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.04)",
-        float: "0 12px 40px rgba(16, 24, 40, 0.10)",
+        card: "0 1px 2px rgba(16, 24, 40, 0.03)",
+        float: "0 8px 30px rgba(16, 24, 40, 0.10)",
       },
       fontFamily: {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],

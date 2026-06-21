@@ -6,9 +6,9 @@ import { formatRupeesPlain, formatPercent } from "@/lib/finance/format";
 import { cn } from "@/lib/cn";
 
 const HEAT_STOPS = [
-  [22, 163, 74],
-  [234, 179, 8],
-  [229, 72, 77],
+  [111, 174, 140],
+  [220, 165, 106],
+  [217, 138, 142],
 ];
 
 function lerp(a: number, b: number, t: number): number {
@@ -97,7 +97,7 @@ export function SensitivityGrid() {
           className="h-2 flex-1 rounded-full"
           style={{
             background:
-              "linear-gradient(to right, rgb(22,163,74), rgb(234,179,8), rgb(229,72,77))",
+              "linear-gradient(to right, rgb(111,174,140), rgb(220,165,106), rgb(217,138,142))",
           }}
         />
         <span>higher EMI</span>

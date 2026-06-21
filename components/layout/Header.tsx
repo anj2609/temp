@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/Badge";
 import { ThemeToggle } from "@/components/calculator/ThemeToggle";
 import { ShareQr } from "@/components/share/ShareQr";
-import { CrownIcon, RedoIcon, UndoIcon } from "@/components/ui/icons";
+import { RedoIcon, UndoIcon } from "@/components/ui/icons";
 import { useTabPresence } from "@/hooks/useTabPresence";
 import { useEmiStore } from "@/store/useEmiStore";
 import { shortTabId, tabColor } from "@/lib/sync/tabIdentity";
@@ -33,8 +33,8 @@ function AvatarRail({
               isLead ? ", leader" : ""
             }`}
             className={cn(
-              "relative flex h-9 w-9 items-center justify-center rounded-full border-2 text-[11px] font-semibold text-white",
-              isSelf ? "border-ink" : "border-surface"
+              "relative flex h-9 w-9 items-center justify-center rounded-full text-[11px] font-semibold text-white ring-2",
+              isLead ? "ring-accent" : isSelf ? "ring-ink" : "ring-surface"
             )}
             style={{
               backgroundColor: tabColor(id),
@@ -43,14 +43,6 @@ function AvatarRail({
             }}
           >
             {shortTabId(id).slice(0, 2)}
-            {isLead ? (
-              <span
-                className="absolute -right-1.5 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-surface"
-                style={{ color: "#d9a300" }}
-              >
-                <CrownIcon size={11} />
-              </span>
-            ) : null}
           </span>
         );
       })}

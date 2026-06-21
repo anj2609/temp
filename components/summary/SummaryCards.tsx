@@ -7,19 +7,30 @@ import { useEmiResult } from "@/hooks/useEmiResult";
 import { formatRupees } from "@/lib/finance/format";
 import { ReceiptIcon, TrendingUpIcon, WalletIcon } from "@/components/ui/icons";
 
+type Tone = "accent" | "negative" | "neutral";
+
+const toneTile: Record<Tone, string> = {
+  accent: "bg-accent-soft text-accent-ink",
+  negative: "bg-negative-soft text-negative",
+  neutral: "bg-surface-muted text-ink-muted",
+};
+
 interface StatProps {
   label: string;
   value: string;
   helper: string;
   icon: ReactNode;
+  tone: Tone;
   emphasis?: boolean;
 }
 
-function Stat({ label, value, helper, icon, emphasis }: StatProps) {
+function Stat({ label, value, helper, icon, tone, emphasis }: StatProps) {
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-2">
-        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent-soft text-accent-ink">
+      <div className="flex items-center gap-2.5">
+        <span
+          className={`flex h-9 w-9 items-center justify-center rounded-xl ${toneTile[tone]}`}
+        >
           {icon}
         </span>
         <span className="text-sm text-ink-muted">{label}</span>
@@ -50,6 +61,7 @@ export function SummaryCards() {
           label="Monthly EMI"
           value={formatRupees(summary.emi)}
           helper="fixed payment every month"
+          tone="accent"
           emphasis
           icon={<WalletIcon size={16} />}
         />
@@ -57,12 +69,14 @@ export function SummaryCards() {
           label="Total interest"
           value={formatRupees(summary.totalInterest)}
           helper="cost of borrowing over the tenure"
+          tone="negative"
           icon={<TrendingUpIcon size={16} />}
         />
         <Stat
           label="Total payable"
           value={formatRupees(summary.totalPayable)}
           helper="principal plus total interest"
+          tone="neutral"
           icon={<ReceiptIcon size={16} />}
         />
       </div>

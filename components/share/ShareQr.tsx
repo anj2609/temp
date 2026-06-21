@@ -72,7 +72,7 @@ export function ShareQr() {
           <button
             type="button"
             onClick={copy}
-            className="mt-3 w-full rounded-xl bg-accent px-3 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            className="mt-3 w-full rounded-xl bg-ink px-3 py-2 text-sm font-semibold text-surface transition-opacity hover:opacity-90"
           >
             {copied ? "Link copied" : "Copy link"}
           </button>

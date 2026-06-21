@@ -39,7 +39,7 @@ export function PrepaymentForm() {
         <button
           type="button"
           onClick={submit}
-          className="h-[42px] rounded-xl bg-accent px-5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          className="h-[42px] rounded-xl bg-ink px-5 text-sm font-semibold text-surface transition-opacity hover:opacity-90"
         >
           Add
         </button>

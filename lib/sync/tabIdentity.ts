@@ -14,13 +14,13 @@ export function shortTabLabel(tabId: string): string {
 }
 
 const TAB_PALETTE = [
-  "#16a34a",
-  "#2563eb",
-  "#d8572f",
-  "#9333ea",
-  "#0d9488",
-  "#db2777",
-  "#ca8a04",
+  "#5f86bd",
+  "#c06b70",
+  "#4f9b78",
+  "#8b6fc0",
+  "#4f9aa0",
+  "#c08a4a",
+  "#b56992",
 ];
 
 export function tabColor(tabId: string): string {

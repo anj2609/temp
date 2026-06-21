@@ -41,7 +41,7 @@ export function NumberField({
   return (
     <div
       className={cn(
-        "flex items-center gap-1 rounded-xl border border-border bg-surface-muted px-3 py-2 text-sm font-medium text-ink focus-within:border-accent",
+        "flex items-center gap-1 rounded-xl bg-surface-muted px-3 py-2 text-sm font-medium text-ink ring-1 ring-transparent transition focus-within:bg-surface focus-within:ring-accent",
         className
       )}
     >
