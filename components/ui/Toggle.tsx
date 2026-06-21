@@ -65,14 +65,14 @@ export function Toggle<T extends string>({
       aria-label={ariaLabel}
       onKeyDown={onKeyDown}
       className={cn(
-        "relative inline-flex items-center gap-1 rounded-full border border-border bg-surface-muted p-1",
+        "relative inline-flex items-center gap-1 border border-border bg-surface-muted p-1",
         className
       )}
     >
       {pill ? (
         <span
           aria-hidden
-          className="absolute inset-y-1 rounded-full bg-ink shadow-sm"
+          className="absolute inset-y-1 bg-ink shadow-sm"
           style={{
             left: pill.left,
             width: pill.width,
@@ -97,7 +97,7 @@ export function Toggle<T extends string>({
             tabIndex={active ? 0 : -1}
             onClick={() => onChange(option.value)}
             className={cn(
-              "relative z-10 rounded-full font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1 focus-visible:ring-offset-surface-muted",
+              "relative z-10 font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1 focus-visible:ring-offset-surface-muted",
               size === "sm" ? "px-3 py-1 text-xs" : "px-4 py-1.5 text-sm",
               active ? "text-surface" : "text-ink-muted hover:text-ink"
             )}

@@ -37,7 +37,7 @@ export function ExportCsvButton({ rows }: ExportCsvButtonProps) {
       type="button"
       onClick={download}
       disabled={rows.length === 0}
-      className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
+      className="border border-border px-3 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
     >
       Export CSV
     </button>

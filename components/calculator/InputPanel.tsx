@@ -27,12 +27,12 @@ function ResultChip({
 }) {
   return (
     <div
-      className="relative overflow-hidden rounded-2xl bg-accent-soft p-4 ring-1 ring-inset"
+      className="relative overflow-hidden bg-accent-soft p-4 ring-1 ring-inset"
       style={{ "--tw-ring-color": "color-mix(in srgb, var(--accent) 45%, transparent)" } as React.CSSProperties}
     >
       <span
         aria-hidden
-        className="pointer-events-none absolute -right-6 -top-6 h-20 w-20 rounded-full"
+        className="pointer-events-none absolute -right-6 -top-6 h-20 w-20"
         style={{ backgroundColor: "color-mix(in srgb, var(--accent) 22%, transparent)" }}
       />
       <div className="relative">

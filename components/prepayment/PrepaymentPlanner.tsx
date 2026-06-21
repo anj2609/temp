@@ -10,7 +10,7 @@ import { formatRupees, formatMonths } from "@/lib/finance/format";
 
 function SavingsStat({ label, value, helper }: { label: string; value: string; helper: string }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface-muted px-4 py-3">
+    <div className="border border-border bg-surface-muted px-4 py-3">
       <p className="text-xs text-ink-muted">{label}</p>
       <p className="mt-1 text-xl font-semibold text-ink">{value}</p>
       <p className="text-xs text-ink-subtle">{helper}</p>

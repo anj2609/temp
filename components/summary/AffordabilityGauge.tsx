@@ -55,7 +55,7 @@ export function AffordabilityGauge() {
     <div className="mt-5 border-t border-border pt-4">
       <div className="flex items-center justify-between gap-3">
         <span className="text-xs font-medium text-ink-muted">EMI affordability</span>
-        <label className="flex items-center gap-1.5 rounded-lg bg-surface-muted px-2.5 py-1.5 ring-1 ring-transparent transition-shadow focus-within:ring-accent/60 cursor-text">
+        <label className="flex items-center gap-1.5 bg-surface-muted px-2.5 py-1.5 ring-1 ring-transparent transition-shadow focus-within:ring-accent/60 cursor-text">
           <span className="flex-shrink-0 text-xs text-ink-subtle">₹</span>
           <input
             ref={inputRef}

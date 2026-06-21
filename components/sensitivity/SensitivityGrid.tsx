@@ -70,7 +70,7 @@ export function SensitivityGrid() {
                     <td
                       key={`${cell.tenure}-${cell.rate}`}
                       className={cn(
-                        "rounded-lg px-2 py-1.5 tabular-nums transition-transform",
+                        "px-2 py-1.5 tabular-nums transition-transform",
                         cell.isCurrent
                           ? "font-semibold text-surface ring-2 ring-ink"
                           : "font-medium text-ink hover:scale-[1.04]"
@@ -94,7 +94,7 @@ export function SensitivityGrid() {
       <div className="mt-4 flex items-center gap-3 text-xs text-ink-subtle">
         <span>lower EMI</span>
         <span
-          className="h-2 flex-1 rounded-full"
+          className="h-2 flex-1"
           style={{
             background:
               "linear-gradient(to right, rgb(111,174,140), rgb(220,165,106), rgb(217,138,142))",

@@ -20,7 +20,7 @@ export function Pagination({ page, pageCount, onChange }: PaginationProps) {
         onClick={() => go(page - 1)}
         disabled={page <= 1}
         className={cn(
-          "rounded-full border border-border px-3 py-1.5 font-medium text-ink-muted transition-colors",
+          "border border-border px-3 py-1.5 font-medium text-ink-muted transition-colors",
           page <= 1 ? "cursor-not-allowed opacity-40" : "hover:text-ink"
         )}
       >
@@ -34,7 +34,7 @@ export function Pagination({ page, pageCount, onChange }: PaginationProps) {
         onClick={() => go(page + 1)}
         disabled={page >= pageCount}
         className={cn(
-          "rounded-full border border-border px-3 py-1.5 font-medium text-ink-muted transition-colors",
+          "border border-border px-3 py-1.5 font-medium text-ink-muted transition-colors",
           page >= pageCount ? "cursor-not-allowed opacity-40" : "hover:text-ink"
         )}
       >

@@ -63,7 +63,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
   return (
     <div
       role="status"
-      className="pointer-events-auto flex max-w-[280px] overflow-hidden rounded-xl border border-border bg-surface shadow-float transition-all duration-300"
+      className="pointer-events-auto flex max-w-[280px] overflow-hidden border border-border bg-surface shadow-float transition-all duration-300"
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0) scale(1)" : "translateY(10px) scale(0.97)",

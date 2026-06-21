@@ -30,7 +30,7 @@ export function ThemeToggle() {
       onClick={handleToggle}
       aria-label="Toggle theme"
       title="Toggle theme (synced across tabs)"
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-ink-muted transition-colors hover:text-ink"
+      className="flex h-10 w-10 items-center justify-center border border-border bg-surface text-ink-muted transition-colors hover:text-ink"
     >
       {isDark ? <SunIcon /> : <MoonIcon />}
     </button>

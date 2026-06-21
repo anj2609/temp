@@ -94,7 +94,7 @@ function HistoryButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-ink-muted transition-colors",
+        "flex h-10 w-10 items-center justify-center border border-border bg-surface text-ink-muted transition-colors",
         disabled ? "cursor-not-allowed opacity-40" : "hover:text-ink"
       )}
     >

@@ -56,7 +56,7 @@ export function AmortizationPanel() {
             {insights.map((insight) => (
               <div
                 key={insight.key}
-                className="rounded-xl bg-surface-muted px-3.5 py-3"
+                className="bg-surface-muted px-3.5 py-3"
               >
                 <p className="text-[11px] text-ink-subtle">{insight.label}</p>
                 <p className="mt-0.5 text-sm font-semibold text-ink">{insight.value}</p>
