@@ -28,11 +28,11 @@ export function PrepaymentForm() {
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_1.4fr_auto] sm:items-end">
-        <label className="space-y-1.5 text-sm">
+        <label className="min-w-0 space-y-1.5 text-sm">
           <span className="text-ink-muted">Month</span>
           <NumberField value={month} onCommit={setMonth} min={1} max={tenureMonths} step={1} />
         </label>
-        <label className="space-y-1.5 text-sm">
+        <label className="min-w-0 space-y-1.5 text-sm">
           <span className="text-ink-muted">Amount</span>
           <NumberField value={amount} onCommit={setAmount} min={1} step={1000} prefix="₹" />
         </label>

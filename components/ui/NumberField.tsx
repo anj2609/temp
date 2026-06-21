@@ -45,7 +45,7 @@ export function NumberField({
         className
       )}
     >
-      {prefix ? <span className="text-ink-subtle">{prefix}</span> : null}
+      {prefix ? <span className="flex-shrink-0 text-ink-subtle">{prefix}</span> : null}
       <input
         type="number"
         inputMode="decimal"

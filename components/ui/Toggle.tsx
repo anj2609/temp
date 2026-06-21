@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 
 interface ToggleOption<T extends string> {
@@ -22,34 +23,56 @@ export function Toggle<T extends string>({
   size = "md",
   className,
 }: ToggleProps<T>) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const activeIndex = options.findIndex((o) => o.value === value);
+  const [pill, setPill] = useState<{ left: number; width: number } | null>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const btn = btnRefs.current[activeIndex];
+    if (!container || !btn) return;
+    const cr = container.getBoundingClientRect();
+    const br = btn.getBoundingClientRect();
+    setPill({ left: br.left - cr.left, width: br.width });
+    setReady(true);
+  }, [activeIndex, value]);
 
   return (
     <div
+      ref={containerRef}
       className={cn(
-        "relative inline-flex rounded-full border border-border bg-surface-muted p-1",
+        "relative inline-flex items-center gap-1 rounded-full border border-border bg-surface-muted p-1",
         className
       )}
     >
-      <span
-        aria-hidden
-        className="absolute inset-y-1 left-1 rounded-full bg-ink shadow-sm"
-        style={{
-          width: `calc((100% - 8px) / ${options.length})`,
-          transform: `translateX(${activeIndex * 100}%)`,
-          transition: "transform 220ms cubic-bezier(0.4, 0, 0.2, 1)",
-          willChange: "transform",
-        }}
-      />
-      {options.map((option) => {
+      {pill ? (
+        <span
+          aria-hidden
+          className="absolute inset-y-1 rounded-full bg-ink shadow-sm"
+          style={{
+            left: pill.left,
+            width: pill.width,
+            transition: ready
+              ? "left 220ms cubic-bezier(0.4,0,0.2,1), width 220ms cubic-bezier(0.4,0,0.2,1)"
+              : "none",
+            willChange: "left",
+          }}
+        />
+      ) : null}
+      {options.map((option, i) => {
         const active = option.value === value;
         return (
           <button
             key={option.value}
+            ref={(el) => {
+              btnRefs.current[i] = el;
+            }}
             type="button"
             onClick={() => onChange(option.value)}
             className={cn(
-              "relative z-10 flex-1 rounded-full font-medium transition-colors duration-200",
+              "relative z-10 rounded-full font-medium transition-colors duration-200",
               size === "sm" ? "px-3 py-1 text-xs" : "px-4 py-1.5 text-sm",
               active ? "text-surface" : "text-ink-muted hover:text-ink"
             )}
