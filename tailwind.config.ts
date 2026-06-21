@@ -35,7 +35,7 @@ const config: Config = {
         float: "0 8px 30px rgba(16, 24, 40, 0.10)",
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        sans: ["var(--font-melody)", "system-ui", "sans-serif"],
         mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
       },
     },
