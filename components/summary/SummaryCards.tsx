@@ -6,6 +6,7 @@ import { PrincipalInterestBar } from "./PrincipalInterestBar";
 import { useEmiResult } from "@/hooks/useEmiResult";
 import { formatRupees } from "@/lib/finance/format";
 import { ReceiptIcon, TrendingUpIcon, WalletIcon } from "@/components/ui/icons";
+import { RollingNumber } from "@/components/ui/RollingNumber";
 
 type Tone = "accent" | "negative" | "neutral";
 
@@ -17,7 +18,7 @@ const toneTile: Record<Tone, string> = {
 
 interface StatProps {
   label: string;
-  value: string;
+  value: ReactNode;
   helper: string;
   icon: ReactNode;
   tone: Tone;
@@ -59,7 +60,7 @@ export function SummaryCards() {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
         <Stat
           label="Monthly EMI"
-          value={formatRupees(summary.emi)}
+          value={<RollingNumber value={summary.emi} format={formatRupees} />}
           helper="fixed payment every month"
           tone="accent"
           emphasis
