@@ -95,7 +95,10 @@ export function Providers({ children }: { children: ReactNode }) {
         params.set("rate", String(state.calculator.annualRate));
         params.set("tenure", String(state.calculator.tenureMonths));
         params.set("mode", state.mode);
-        window.history.replaceState(null, "", `?${params.toString()}`);
+        const nextSearch = `?${params.toString()}`;
+        if (nextSearch !== window.location.search) {
+          window.history.replaceState(window.history.state, "", nextSearch);
+        }
       }, 200);
     });
     return () => {
