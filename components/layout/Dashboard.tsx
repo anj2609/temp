@@ -24,9 +24,16 @@ export function Dashboard() {
 
   return (
     <main className="mx-auto max-w-7xl px-5 py-6 sm:px-6 lg:px-8">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-surface"
+      >
+        Skip to calculator
+      </a>
+
       <Header />
 
-      <div className="mt-4 space-y-2">
+      <div id="main-content" tabIndex={-1} className="mt-4 space-y-2 focus:outline-none">
         <ModeTabs />
 
         {mode === "single" ? (

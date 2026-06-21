@@ -12,6 +12,7 @@ export function ModeTabs() {
     <Toggle<Mode>
       value={mode}
       onChange={setMode}
+      ariaLabel="Calculator mode"
       options={[
         { value: "single", label: "Single" },
         { value: "compare", label: "Compare" },

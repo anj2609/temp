@@ -14,6 +14,7 @@ interface ToggleProps<T extends string> {
   onChange: (value: T) => void;
   size?: "sm" | "md";
   className?: string;
+  ariaLabel?: string;
 }
 
 export function Toggle<T extends string>({
@@ -22,6 +23,7 @@ export function Toggle<T extends string>({
   onChange,
   size = "md",
   className,
+  ariaLabel,
 }: ToggleProps<T>) {
   const containerRef = useRef<HTMLDivElement>(null);
   const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -39,9 +41,29 @@ export function Toggle<T extends string>({
     setReady(true);
   }, [activeIndex, value]);
 
+  const move = (dir: 1 | -1) => {
+    const count = options.length;
+    const next = (activeIndex + dir + count) % count;
+    onChange(options[next].value);
+    btnRefs.current[next]?.focus();
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault();
+      move(1);
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault();
+      move(-1);
+    }
+  };
+
   return (
     <div
       ref={containerRef}
+      role="radiogroup"
+      aria-label={ariaLabel}
+      onKeyDown={onKeyDown}
       className={cn(
         "relative inline-flex items-center gap-1 rounded-full border border-border bg-surface-muted p-1",
         className
@@ -70,9 +92,12 @@ export function Toggle<T extends string>({
               btnRefs.current[i] = el;
             }}
             type="button"
+            role="radio"
+            aria-checked={active}
+            tabIndex={active ? 0 : -1}
             onClick={() => onChange(option.value)}
             className={cn(
-              "relative z-10 rounded-full font-medium transition-colors duration-200",
+              "relative z-10 rounded-full font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1 focus-visible:ring-offset-surface-muted",
               size === "sm" ? "px-3 py-1 text-xs" : "px-4 py-1.5 text-sm",
               active ? "text-surface" : "text-ink-muted hover:text-ink"
             )}

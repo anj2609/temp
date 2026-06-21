@@ -137,6 +137,7 @@ export function InputPanel() {
           value={solveMode}
           onChange={setSolveMode}
           size="sm"
+          ariaLabel="Solve for"
           options={[
             { value: "emi", label: "EMI" },
             { value: "amount", label: "Amount" },

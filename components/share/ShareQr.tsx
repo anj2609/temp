@@ -29,8 +29,15 @@ export function ShareQr() {
     const onDoc = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) setOpen(false);
     };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
     document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
   }, [open]);
 
   const copy = async () => {
@@ -49,15 +56,21 @@ export function ShareQr() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label="Share this scenario"
+        aria-haspopup="dialog"
+        aria-expanded={open}
         title="Share / open on your phone"
-        className="flex h-10 items-center gap-2 rounded-full border border-border bg-surface px-4 text-sm font-medium text-ink-muted transition-colors hover:text-ink"
+        className="flex h-10 items-center gap-2 rounded-full border border-border bg-surface px-4 text-sm font-medium text-ink-muted transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         <QrIcon size={16} />
         Share
       </button>
 
       {open ? (
-        <div className="absolute right-0 top-12 z-50 w-64 rounded-2xl border border-border bg-surface p-4 shadow-float">
+        <div
+          role="dialog"
+          aria-label="Share this scenario"
+          className="absolute right-0 top-12 z-50 w-64 rounded-2xl border border-border bg-surface p-4 shadow-float"
+        >
           <p className="text-sm font-semibold text-ink">Scan to continue on your phone</p>
           <p className="mt-0.5 text-xs text-ink-muted">
             This scenario is encoded in the link below.

@@ -32,6 +32,11 @@ export function SummaryCards() {
 
   return (
     <Card>
+      <p className="sr-only" aria-live="polite">
+        Monthly EMI {formatRupees(summary.emi)}. Total interest{" "}
+        {formatRupees(summary.totalInterest)}. Total payable{" "}
+        {formatRupees(summary.totalPayable)}.
+      </p>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 [&>*]:min-w-0">
         <Stat
           label="Monthly EMI"

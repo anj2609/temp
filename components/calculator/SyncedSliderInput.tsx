@@ -87,6 +87,7 @@ export function SyncedSliderInput({
           onChange={handleChange}
           onRelease={release}
           ariaLabel={`${label} slider`}
+          ariaValueText={formatValue(value)}
         />
         {ghostPct !== null ? (
           <>
