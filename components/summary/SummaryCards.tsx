@@ -19,13 +19,7 @@ function Stat({ label, value, helper, emphasis }: StatProps) {
   return (
     <div className="flex flex-col gap-2">
       <span className="text-sm text-ink-muted">{label}</span>
-      <p
-        className={
-          emphasis
-            ? "text-3xl font-semibold tracking-tight text-ink"
-            : "text-2xl font-semibold tracking-tight text-ink"
-        }
-      >
+      <p className="text-2xl font-semibold tracking-tight text-ink">
         {value}
       </p>
       <p className="text-xs text-ink-subtle">{helper}</p>
